@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/style.css">
+	
+	<style>
+        img {
+			max-width: 250px;
+            text-align: center;
+            padding: 2px;
+        }
+        img:hover {
+            background-color: #111111;
+        }
+    </style>
+
+	<title>Editar Produto</title>
+
+</head>
+
+<body>
+	<div class="container">
+		<div class="mt-5">
+			<div class="">
+				<form class="row p-3 shadow rounded-3" action="#" enctype="multipart/form-data"
+					th:action="@{/api/produto/salvarFotos/{id}(id=*{id})}" th:object="${produto}" method="post">
+
+					<div class="col-md-2 mb-2">
+						<label for="inputId" class="label">Id: </label>
+						<input type="text" class="form-control input" id="inputId" th:field="*{id}" readonly>
+					</div>
+
+					<div class="col-md-10 mb-2">
+						<label for="inputNome" class="label">Nome: </label>
+						<input type="text" class="form-control input" id="inputNome" th:field="*{nome}">
+					</div>
+
+					<div class="col-md-12 my-2">
+						<div class="">
+							<label for="uploadImg" class="label">Escolha a Foto:</label>
+							<input class="input" multiple type="file" name="files" accept="image/*" onchange="preViewerImages2();"
+								id="uploadImg"> <span class="fw-bold fs-6 text-danger"> ◄ Selecione mais de uma imagem segurando "SHIFT" ou "CRTL"</span>
+						</div>
+						<div class="my-1">
+							<label for="preViews" class="label">Fotos Escolhidas:</label>
+						</div>
+						<div class="d-flex justify-content-center py-2">
+							<src id="preViews" class="mx-3" name="files" />
+						</div>
+						<div class="mt-2 d-flex justify-content-center">
+							<button type="reset" onclick="removeFirstImage()"  class="btn btn-info shadow">Excluir a Primeira Imagem</button>
+					        <button type="reset" onclick="clearImages()" class="btn btn-info mx-4 shadow">Limpar</button>
+					        <button type="reset" onclick="removeLastImage()" class="btn btn-info shadow">Excluir a Última Imagem</button>
+						</div>
+					</div>
+
+					<div class="text-center col-md-12 p-2 rounded-2">
+						<span class="fw-bold fs-5 text-primary" th:text="${serverMessage}"></span>
+					</div>
+
+					<div class="col-md-12 d-flex justify-content-between  mb-2">
+						<a th:href="@{/api/produto/todos}" class="btn btn-warning shadow"><i
+								class="bi bi-box-arrow-left me-2"></i>Voltar</a>
+						<button type="submit" class="btn btn-primary shadow">
+								Gravar Imagens do Produto<i class="bi bi-save ms-2"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="m-3">
+				<table class="table table-striped table-hover shadow">
+					<thead>
+						<tr class="text-center">
+							<th class="col">ID</th>
+							<th class="col">Nome</th>
+							<th class="col">Caminho</th>
+							<th class="col">Ver</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="foto : ${fotos}" class="text-center">
+							<td th:text="${foto.id}"></td>
+							<td th:text="${foto.nome}"></td>
+							<td th:text="${foto.caminho}"></td>
+							<td>
+								<a 	class="btn btn-primary btn-sm mx-2"
+									data-bs-toggle="modal" th:href="'#fotoModal' + ${foto.id}">
+									
+									Ver 
+								</a>
+								<!-- Modal -->
+								<div class="modal fade" th:id="'fotoModal'+${foto.id}" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+								  <div class="modal-dialog">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h1 class="modal-title fs-5" id="fotoModalLabel"> <span th:text="${foto.nome}"></span> </h1>
+								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								      </div>
+								      <div class="modal-body text-center">
+								        <img th:src="@{${'/api/produto/showImage/'+ foto.id}}" alt="..." class="img-fluid shadow rounded-2" />
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
+								
+								<a 	th:href="@{/api/produto/verFoto/{id}(id=${foto.id})}" 
+									class="btn btn-warning btn-sm">
+									
+									Editar 
+								</a>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>		
+
+	</div>
+	<script type="text/javascript" src="/js/scripts.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
